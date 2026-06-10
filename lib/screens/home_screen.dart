@@ -17,6 +17,15 @@ class HomeScreen extends StatelessWidget {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.pushNamed(context, '/patients');
+          } else if (index == 2) {
+            Navigator.pushNamed(context, '/reports');
+          } else if (index == 3) {
+            Navigator.pushNamed(context, '/profile');
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.remove_red_eye_outlined),

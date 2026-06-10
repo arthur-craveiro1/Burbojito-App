@@ -26,36 +26,130 @@ class _ExamProgressScreenState
   }
 
   void increaseCircles() {
-  setState(() {
-    if (filledCircles < 5) {
-      filledCircles++;
-    }
+    setState(() {
+      if (filledCircles < 5) {
+        filledCircles++;
+      }
+    });
 
     // MOSTRA ERRO AO CHEGAR EM 5
     if (filledCircles == 5) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Erro'),
-            content: const Text(
-              'O desvio ocular atingiu o limite máximo. Por favor, reinicie o exame',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      _showExamCancelledDialog();
     }
-  });
-}
+  }
+
+  void _showExamCancelledDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // EYE ICON WITH RED X BADGE
+                SizedBox(
+                  width: 110,
+                  height: 90,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.remove_red_eye,
+                        size: 84,
+                        color: Color(0xFF2F8FFF),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 6,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.cancel,
+                            size: 38,
+                            color: Color(0xFFE53935),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                const Text(
+                  'Exame cancelado',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0A1B33),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                const Text(
+                  'O paciente ultrapassou o limite de 5 desvios. '
+                  'O teste não é clinicamente válido. '
+                  'Por favor, reajuste e tente novamente.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                    color: Color(0xFF4A5568),
+                  ),
+                ),
+
+                const SizedBox(height: 26),
+
+                // VOLTAR AO INÍCIO
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home',
+                        (route) => false,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFEB6D17),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Text(
+                      'VOLTAR AO INÍCIO',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
